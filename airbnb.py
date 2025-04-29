@@ -46,3 +46,24 @@ for col in categorical_cols:
     else:
         print(f"\nWarning: Column '{col}' not found in the dataset.")
 
+# --- Step 2: Handle Duplicate Listings ---
+print("\n--- Step 2: Handle Duplicate Listings ---")
+
+# Identify Duplicates: Check for duplicate rows based on the listing 'id'
+# .duplicated() returns a boolean Series, sum() counts the True values
+if 'id' in df.columns:
+    num_duplicates = df.duplicated(subset=['id']).sum()
+    print(f"\nNumber of duplicate listings based on 'id': {num_duplicates}")
+
+    # Remove Duplicates: If duplicates are found, remove them
+    if num_duplicates > 0:
+        initial_rows = df.shape[0]
+        # keep='first' keeps the first occurrence, inplace=True modifies the DataFrame directly
+        df.drop_duplicates(subset=['id'], keep='first', inplace=True)
+        rows_after_dropping = df.shape[0]
+        print(f"Removed {num_duplicates} duplicate rows. Remaining rows: {rows_after_dropping}")
+    else:
+        print("No duplicate listings found based on 'id'.")
+else:
+    print("\nWarning: 'id' column not found. Cannot check for duplicate listings based on id.")
+
